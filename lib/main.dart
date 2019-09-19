@@ -62,6 +62,13 @@ class MyAppState extends State<MyApp> {
         }
         return null;
       },
+      // if routes fail or return null the onUnknownRoute will work in this case
+      // Default route (screen)
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+            builder: (BuildContext context) =>
+                ProductsPage(product, _addProduct, _deleteProduct));
+      },
     );
   }
 }
