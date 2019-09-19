@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import './pages/ProductPage.dart';
 import './pages/productsAdminPage.dart';
+//import './pages/authPage.dart';
 // import 'package:flutter/rendering.dart';
 
 void main() {
@@ -23,9 +24,9 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  final List<Map<String, String>> product = [];
+  final List<Map<String, dynamic>> product = [];
 
-  void _addProduct(Map<String, String> newProduct) {
+  void _addProduct(Map<String, dynamic> newProduct) {
     setState(() {
       product.add(newProduct);
     });
@@ -44,9 +45,9 @@ class MyAppState extends State<MyApp> {
 //      home: AuthPage(),
       routes: {
         // that's mean home page => '/'
-        '/': (BuildContext context) =>
-            ProductsPage(product, _addProduct, _deleteProduct),
-        '/admin': (BuildContext context) => ProductAdminPage(),
+        '/': (BuildContext context) => ProductsPage(product),
+        '/admin': (BuildContext context) =>
+            ProductAdminPage(_addProduct, _deleteProduct),
       },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
@@ -66,8 +67,7 @@ class MyAppState extends State<MyApp> {
       // Default route (screen)
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
-            builder: (BuildContext context) =>
-                ProductsPage(product, _addProduct, _deleteProduct));
+            builder: (BuildContext context) => ProductsPage(product));
       },
     );
   }
