@@ -10,7 +10,10 @@ class Prodects extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Image.asset(product[index]['image']),
-          Text(product[index]['title']),
+          Container(
+            child: Text(product[index]['title']),
+            margin: EdgeInsets.only(top: 10.0),
+          ),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
