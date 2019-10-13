@@ -41,6 +41,7 @@ class MyAppState extends State<MyApp> {
   Widget build(context) {
     return MaterialApp(
       theme: ThemeData(
+        accentColor: Colors.deepPurple,
           primarySwatch: Colors.deepOrange, brightness: Brightness.light),
 //      home: AuthPage(),
       routes: {
