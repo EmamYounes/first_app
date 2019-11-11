@@ -1,4 +1,5 @@
 import 'package:first_app/pages/ProductsPage.dart';
+import 'package:first_app/pages/authPage.dart';
 import 'package:flutter/material.dart';
 
 import './pages/ProductPage.dart';
@@ -43,13 +44,13 @@ class MyAppState extends State<MyApp> {
       theme: ThemeData(
         accentColor: Colors.deepPurple,
           primarySwatch: Colors.deepOrange, brightness: Brightness.light),
-//      home: AuthPage(),
-      routes: {
+      home: AuthPage(),
+/*      routes: {
         // that's mean home page => '/'
         '/': (BuildContext context) => ProductsPage(product),
         '/admin': (BuildContext context) =>
             ProductAdminPage(_addProduct, _deleteProduct),
-      },
+      },*/
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
         int index = int.parse(pathElements[2]);
