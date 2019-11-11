@@ -45,12 +45,16 @@ class MyAppState extends State<MyApp> {
         accentColor: Colors.deepPurple,
           primarySwatch: Colors.deepOrange, brightness: Brightness.light),
       home: AuthPage(),
-/*      routes: {
+     routes: {
         // that's mean home page => '/'
+/*
         '/': (BuildContext context) => ProductsPage(product),
+*/
+       '/products': (BuildContext context) =>
+           ProductsPage(product),
         '/admin': (BuildContext context) =>
             ProductAdminPage(_addProduct, _deleteProduct),
-      },*/
+      },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
         int index = int.parse(pathElements[2]);
