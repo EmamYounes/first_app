@@ -38,6 +38,13 @@ class Prodects extends StatelessWidget {
             ),
             margin: EdgeInsets.only(top: 10.0),
           ),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 2.5, horizontal: 6.0),
+            child: Text('test name '),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+                border: Border.all(color: Colors.grey, width: 1.0)),
+          ),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
