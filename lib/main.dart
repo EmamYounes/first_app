@@ -1,10 +1,10 @@
-import 'package:first_app/pages/ProductsPage.dart';
-import 'package:first_app/pages/authPage.dart';
+import 'package:first_app/pages/products.dart';
+import 'package:first_app/pages/auth.dart';
 import 'package:flutter/material.dart';
 
-import './pages/ProductPage.dart';
-import './pages/productsAdminPage.dart';
-//import './pages/authPage.dart';
+import './pages/product.dart';
+import './pages/productsAdmin.dart';
+//import './pages/auth.dart';
 // import 'package:flutter/rendering.dart';
 
 void main() {
