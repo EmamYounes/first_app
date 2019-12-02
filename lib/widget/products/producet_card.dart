@@ -1,3 +1,4 @@
+import 'package:first_app/widget/products/address_tag.dart';
 import 'package:first_app/widget/products/price_tag.dart';
 import 'package:first_app/widget/ui_elements/title_default.dart';
 import 'package:flutter/material.dart';
@@ -27,31 +28,21 @@ class ProductCard extends StatelessWidget {
             ),
             margin: EdgeInsets.only(top: 10.0),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 2.5, horizontal: 6.0),
-            child: Text('test name '),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                border: Border.all(color: Colors.grey, width: 1.0)),
-          ),
+          AddressTag('Union Square, San Francisco'),
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
               IconButton(
-                color: Theme
-                    .of(context)
-                    .accentColor,
+                color: Theme.of(context).accentColor,
                 icon: Icon(Icons.info),
-                onPressed: () =>
-                    Navigator.pushNamed<bool>(
-                        context, '/product/' + productIndex.toString()),
+                onPressed: () => Navigator.pushNamed<bool>(
+                    context, '/product/' + productIndex.toString()),
               ),
               IconButton(
                 icon: Icon(Icons.favorite_border),
                 color: Colors.red,
-                onPressed: () =>
-                    Navigator.pushNamed<bool>(
-                        context, '/product/' + productIndex.toString()),
+                onPressed: () => Navigator.pushNamed<bool>(
+                    context, '/product/' + productIndex.toString()),
               )
             ],
           )
