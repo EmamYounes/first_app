@@ -15,39 +15,47 @@ class ProductCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Image.asset(product['image']),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                TitleDefault(product['title']),
-                SizedBox(
-                  width: 8.0,
-                ),
-                Pricetag(product['price'].toString())
-              ],
-            ),
-            margin: EdgeInsets.only(top: 10.0),
-          ),
+          _buildTitlePriceContainer(),
           AddressTag('Union Square, San Francisco'),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              IconButton(
-                color: Theme.of(context).accentColor,
-                icon: Icon(Icons.info),
-                onPressed: () => Navigator.pushNamed<bool>(
-                    context, '/product/' + productIndex.toString()),
-              ),
-              IconButton(
-                icon: Icon(Icons.favorite_border),
-                color: Colors.red,
-                onPressed: () => Navigator.pushNamed<bool>(
-                    context, '/product/' + productIndex.toString()),
-              )
-            ],
-          )
+          _buildActionButtons(context)
         ],
       ),
     );
+  }
+
+  ButtonBar _buildActionButtons(BuildContext context) {
+    return ButtonBar(
+          alignment: MainAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              color: Theme.of(context).accentColor,
+              icon: Icon(Icons.info),
+              onPressed: () => Navigator.pushNamed<bool>(
+                  context, '/product/' + productIndex.toString()),
+            ),
+            IconButton(
+              icon: Icon(Icons.favorite_border),
+              color: Colors.red,
+              onPressed: () => Navigator.pushNamed<bool>(
+                  context, '/product/' + productIndex.toString()),
+            )
+          ],
+        );
+  }
+
+  Container _buildTitlePriceContainer() {
+    return Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TitleDefault(product['title']),
+              SizedBox(
+                width: 8.0,
+              ),
+              Pricetag(product['price'].toString())
+            ],
+          ),
+          margin: EdgeInsets.only(top: 10.0),
+        );
   }
 }
