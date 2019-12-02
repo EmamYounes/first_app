@@ -19,53 +19,18 @@ class _AuthPageState extends State<AuthPage> {
         title: Text('Login'),
       ),
       body: Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(.5), BlendMode.dstATop),
-                fit: BoxFit.cover,
-                image: AssetImage('assets/10.2 background.jpg'))),
+        decoration: BoxDecoration(image: _buildBackgroundImage()),
         padding: EdgeInsets.all(10.0),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                TextField(
-                  decoration: InputDecoration(
-                      labelText: 'E-Mail',
-                      fillColor: Colors.white,
-                      filled: true),
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (String value) {
-                    setState(() {
-                      _emailValue = value;
-                    });
-                  },
-                ),
+                _buildEmailTextField(),
                 SizedBox(
                   height: 10.9,
                 ),
-                TextField(
-                  decoration: InputDecoration(
-                      labelText: 'Password',
-                      fillColor: Colors.white,
-                      filled: true),
-                  obscureText: true,
-                  onChanged: (String value) {
-                    setState(() {
-                      _passwordValue = value;
-                    });
-                  },
-                ),
-                SwitchListTile(
-                  value: _acceptTerms,
-                  onChanged: (bool value) {
-                    setState(() {
-                      _acceptTerms = value;
-                    });
-                  },
-                  title: Text('Accept Terms'),
-                ),
+                _buildPasswordTextField(),
+                _buildAcceptSwitch(),
                 SizedBox(
                   height: 10.0,
                 ),
@@ -73,11 +38,7 @@ class _AuthPageState extends State<AuthPage> {
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   child: Text('LOGIN'),
-                  onPressed: () {
-                    print(_emailValue);
-                    print(_passwordValue);
-                    Navigator.pushReplacementNamed(context, '/products');
-                  },
+                  onPressed: _submitForm,
                 ),
               ],
             ),
@@ -85,5 +46,57 @@ class _AuthPageState extends State<AuthPage> {
         ),
       ),
     );
+  }
+
+  void _submitForm() {
+    print(_emailValue);
+    print(_passwordValue);
+    Navigator.pushReplacementNamed(context, '/products');
+  }
+
+  SwitchListTile _buildAcceptSwitch() {
+    return SwitchListTile(
+      value: _acceptTerms,
+      onChanged: (bool value) {
+        setState(() {
+          _acceptTerms = value;
+        });
+      },
+      title: Text('Accept Terms'),
+    );
+  }
+
+  TextField _buildPasswordTextField() {
+    return TextField(
+      decoration: InputDecoration(
+          labelText: 'Password', fillColor: Colors.white, filled: true),
+      obscureText: true,
+      onChanged: (String value) {
+        setState(() {
+          _passwordValue = value;
+        });
+      },
+    );
+  }
+
+  TextField _buildEmailTextField() {
+    return TextField(
+      decoration: InputDecoration(
+          labelText: 'E-Mail', fillColor: Colors.white, filled: true),
+      keyboardType: TextInputType.emailAddress,
+      onChanged: (String value) {
+        setState(() {
+          _emailValue = value;
+        });
+      },
+    );
+  }
+
+  DecorationImage _buildBackgroundImage() {
+    return DecorationImage(
+        colorFilter:
+            ColorFilter.mode(Colors.black.withOpacity(.5), BlendMode.dstATop),
+        fit: BoxFit.cover,
+        image: AssetImage('assets/10.2 background.jpg'));
   }
 }

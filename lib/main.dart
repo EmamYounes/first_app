@@ -1,9 +1,10 @@
-import 'package:first_app/pages/products.dart';
 import 'package:first_app/pages/auth.dart';
+import 'package:first_app/pages/products.dart';
 import 'package:flutter/material.dart';
 
 import './pages/product.dart';
 import './pages/productsAdmin.dart';
+
 //import './pages/auth.dart';
 // import 'package:flutter/rendering.dart';
 
@@ -42,16 +43,16 @@ class MyAppState extends State<MyApp> {
   Widget build(context) {
     return MaterialApp(
       theme: ThemeData(
-        accentColor: Colors.deepPurple,
-          primarySwatch: Colors.deepOrange, brightness: Brightness.light),
+          accentColor: Colors.deepPurple,
+          primarySwatch: Colors.deepOrange,
+          brightness: Brightness.light),
       home: AuthPage(),
-     routes: {
+      routes: {
         // that's mean home page => '/'
 /*
         '/': (BuildContext context) => ProductsPage(product),
 */
-       '/products': (BuildContext context) =>
-           ProductsPage(product),
+        '/products': (BuildContext context) => ProductsPage(product),
         '/admin': (BuildContext context) =>
             ProductAdminPage(_addProduct, _deleteProduct),
       },
@@ -63,8 +64,11 @@ class MyAppState extends State<MyApp> {
         }
         if (pathElements[1] == 'product') {
           return MaterialPageRoute<bool>(
-            builder: (BuildContext context) =>
-                ProductPage(product[index]['title'], product[index]['image']),
+            builder: (BuildContext context) => ProductPage(
+                product[index]['title'],
+                product[index]['image'],
+                product[index]['price'],
+                product[index]['description']),
           );
         }
         return null;
