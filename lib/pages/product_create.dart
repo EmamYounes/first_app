@@ -33,13 +33,20 @@ class _ProductCreatePage extends State<ProductCreatePage> {
             height: 10.0,
           ),
           RaisedButton(
-            color: Theme.of(context).accentColor,
             textColor: Colors.white,
             child: Text('Save'),
-            onPressed: () {
-              _submitForm(context);
-            },
+            onPressed: _submitForm,
           )
+          /*        GestureDetector(
+            onTap: _submitForm,
+            child: Container(
+              child: Text(
+                'Save',
+                textAlign: TextAlign.center,
+              ),
+              color: Colors.blueAccent,
+            ),
+          )*/
         ],
       ),
     );
@@ -80,7 +87,7 @@ class _ProductCreatePage extends State<ProductCreatePage> {
     );
   }
 
-  void _submitForm(BuildContext context) {
+  void _submitForm() {
     final Map<String, dynamic> products = {
       'title': _titleValue,
       'description': _descriptionValue,
