@@ -45,13 +45,12 @@ class MyAppState extends State<MyApp> {
       theme: ThemeData(
           accentColor: Colors.deepPurple,
           primarySwatch: Colors.deepOrange,
+          buttonColor: Colors.deepPurple,
           brightness: Brightness.light),
-      home: AuthPage(),
+//      home: AuthPage(),
       routes: {
         // that's mean home page => '/'
-/*
-        '/': (BuildContext context) => ProductsPage(product),
-*/
+        '/': (BuildContext context) => AuthPage(),
         '/products': (BuildContext context) => ProductsPage(product),
         '/admin': (BuildContext context) =>
             ProductAdminPage(_addProduct, _deleteProduct),
