@@ -26,17 +26,17 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  final List<Map<String, dynamic>> product = [];
+  final List<Map<String, dynamic>> _products = [];
 
   void _addProduct(Map<String, dynamic> newProduct) {
     setState(() {
-      product.add(newProduct);
+      _products.add(newProduct);
     });
   }
 
   void _deleteProduct(int index) {
     setState(() {
-      product.removeAt(index);
+      _products.removeAt(index);
     });
   }
 
@@ -51,9 +51,9 @@ class MyAppState extends State<MyApp> {
       routes: {
         // that's mean home page => '/'
         '/': (BuildContext context) => AuthPage(),
-        '/products': (BuildContext context) => ProductsPage(product),
+        '/products': (BuildContext context) => ProductsPage(_products),
         '/admin': (BuildContext context) =>
-            ProductAdminPage(_addProduct, _deleteProduct),
+            ProductAdminPage(_addProduct, _deleteProduct,_products),
       },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
@@ -64,10 +64,10 @@ class MyAppState extends State<MyApp> {
         if (pathElements[1] == 'product') {
           return MaterialPageRoute<bool>(
             builder: (BuildContext context) => ProductPage(
-                product[index]['title'],
-                product[index]['image'],
-                product[index]['price'],
-                product[index]['description']),
+                _products[index]['title'],
+                _products[index]['image'],
+                _products[index]['price'],
+                _products[index]['description']),
           );
         }
         return null;
@@ -76,7 +76,7 @@ class MyAppState extends State<MyApp> {
       // Default route (screen)
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
-            builder: (BuildContext context) => ProductsPage(product));
+            builder: (BuildContext context) => ProductsPage(_products));
       },
     );
   }

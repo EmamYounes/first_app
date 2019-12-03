@@ -110,7 +110,7 @@ class _ProductCreatePage extends State<ProductCreatePage> {
   }
 
   void _submitForm() {
-    if (_formKey.currentState.validate()) {
+    if (!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
