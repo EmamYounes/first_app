@@ -1,3 +1,4 @@
+import 'package:first_app/pages/product_edit.dart';
 import 'package:flutter/material.dart';
 
 class ProductListPage extends StatelessWidget {
@@ -16,7 +17,12 @@ class ProductListPage extends StatelessWidget {
               icon: Icon(
                 Icons.edit,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return ProductEditPage(product: products[index]);
+                }));
+              },
             ),
           );
         },
