@@ -15,6 +15,7 @@ class _ProductCreatePage extends State<ProductCreatePage> {
   String _titleValue = '';
   String _descriptionValue = '';
   double _priceValue = 0;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +24,23 @@ class _ProductCreatePage extends State<ProductCreatePage> {
     final double targetPadding = deviceWidth - targetWidth;
     return Container(
       margin: EdgeInsets.all(10.0),
-      child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: targetPadding / 2),
-        children: <Widget>[
-          _buildTitleTextField(),
-          _buildDescriptionTextField(),
-          _buildPriceTextField(),
-          SizedBox(
-            height: 10.0,
-          ),
-          RaisedButton(
-            textColor: Colors.white,
-            child: Text('Save'),
-            onPressed: _submitForm,
-          )
-          /*        GestureDetector(
+      child: Form(
+        key: _formKey,
+        child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: targetPadding / 2),
+          children: <Widget>[
+            _buildTitleTextField(),
+            _buildDescriptionTextField(),
+            _buildPriceTextField(),
+            SizedBox(
+              height: 10.0,
+            ),
+            RaisedButton(
+              textColor: Colors.white,
+              child: Text('Save'),
+              onPressed: _submitForm,
+            )
+            /*        GestureDetector(
             onTap: _submitForm,
             child: Container(
               child: Text(
@@ -47,15 +50,16 @@ class _ProductCreatePage extends State<ProductCreatePage> {
               color: Colors.blueAccent,
             ),
           )*/
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildTitleTextField() {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(labelText: 'Product Title'),
-      onChanged: (String title) {
+      onSaved: (String title) {
         setState(() {
           _titleValue = title;
         });
@@ -64,10 +68,10 @@ class _ProductCreatePage extends State<ProductCreatePage> {
   }
 
   Widget _buildDescriptionTextField() {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(labelText: 'Product Description'),
       maxLines: 4,
-      onChanged: (String description) {
+      onSaved: (String description) {
         setState(() {
           _descriptionValue = description;
         });
@@ -76,10 +80,10 @@ class _ProductCreatePage extends State<ProductCreatePage> {
   }
 
   Widget _buildPriceTextField() {
-    return TextField(
+    return TextFormField(
       decoration: InputDecoration(labelText: 'Product Price'),
       keyboardType: TextInputType.number,
-      onChanged: (String price) {
+      onSaved: (String price) {
         setState(() {
           _priceValue = double.parse(price);
         });
@@ -88,6 +92,7 @@ class _ProductCreatePage extends State<ProductCreatePage> {
   }
 
   void _submitForm() {
+    _formKey.currentState.save();
     final Map<String, dynamic> products = {
       'title': _titleValue,
       'description': _descriptionValue,
