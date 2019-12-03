@@ -34,13 +34,17 @@ class ProductPage extends StatelessWidget {
             _buildAddressPriceRow(),
             Container(
               padding: EdgeInsets.all(10.0),
-              child: RaisedButton(
+              child: Container(
+/*
                 color: Colors.deepPurpleAccent,
+*/
                 child: Text(
                   description,
                   textAlign: TextAlign.center,
                 ),
+/*
                 onPressed: () => _showWarningDialog(context),
+*/
               ),
             )
           ],
