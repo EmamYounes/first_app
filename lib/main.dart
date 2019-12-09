@@ -52,7 +52,7 @@ class MyAppState extends State<MyApp> {
           if (pathElements[1] == 'product') {
             return MaterialPageRoute<bool>(
               builder: (BuildContext context) =>
-                  ProductPage(null, null, null, null),
+                  ProductPage(index),
             );
           }
           return null;
