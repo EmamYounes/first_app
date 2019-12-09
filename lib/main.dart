@@ -1,3 +1,4 @@
+import 'package:first_app/models/product.dart';
 import 'package:first_app/pages/auth.dart';
 import 'package:first_app/pages/products.dart';
 import 'package:flutter/material.dart';
@@ -26,15 +27,15 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  final List<Map<String, dynamic>> _products = [];
+  final List<Product> _products = [];
 
-  void _addProduct(Map<String, dynamic> newProduct) {
+  void _addProduct(Product product) {
     setState(() {
-      _products.add(newProduct);
+      _products.add(product);
     });
   }
 
-  void _updateProduct(int index, Map<String, dynamic> product) {
+  void _updateProduct(int index, Product product) {
     setState(() {
       _products[index] = product;
     });
@@ -70,10 +71,10 @@ class MyAppState extends State<MyApp> {
         if (pathElements[1] == 'product') {
           return MaterialPageRoute<bool>(
             builder: (BuildContext context) => ProductPage(
-                _products[index]['title'],
-                _products[index]['image'],
-                _products[index]['price'],
-                _products[index]['description']),
+                _products[index].title,
+                _products[index].image,
+                _products[index].price,
+                _products[index].description),
           );
         }
         return null;

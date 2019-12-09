@@ -1,10 +1,11 @@
+import 'package:first_app/models/product.dart';
 import 'package:first_app/widget/products/producet_card.dart';
 import 'package:flutter/material.dart';
 
-class Prodects extends StatelessWidget {
-  final List<Map<String, dynamic>> product;
+class Products extends StatelessWidget {
+  final List<Product> product;
 
-  Prodects(this.product);
+  Products(this.product);
 
   Widget buildProductList() {
     Widget productCards;
