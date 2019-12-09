@@ -1,5 +1,7 @@
 import 'package:first_app/models/product.dart';
+import 'package:first_app/scoped-models/products.dart';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class ProductEditPage extends StatefulWidget {
   final Function addProduct;
@@ -60,11 +62,7 @@ class _ProductEditPage extends State<ProductEditPage> {
               SizedBox(
                 height: 10.0,
               ),
-              RaisedButton(
-                textColor: Colors.white,
-                child: Text('Save'),
-                onPressed: _submitForm,
-              )
+              _buildSumitButton()
               /*        GestureDetector(
           onTap: _submitForm,
           child: Container(
@@ -79,6 +77,18 @@ class _ProductEditPage extends State<ProductEditPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSumitButton() {
+    return ScopedModelDescendant<ProductsModel>(
+      builder: (BuildContext context, Widget child, ProductsModel mode) {
+        return RaisedButton(
+          textColor: Colors.white,
+          child: Text('Save'),
+          onPressed: () => _submitForm(mode.addProduct, mode.updateProduct),
+        );
+      },
     );
   }
 
@@ -131,19 +141,19 @@ class _ProductEditPage extends State<ProductEditPage> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm(Function addProduct, Function updateProduct) {
     if (!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
     if (widget.product == null) {
-      widget.addProduct(Product(
+      addProduct(Product(
           title: _formData['title'],
           image: _formData['image'],
           price: _formData['price'],
           description: _formData['description']));
     } else {
-      widget.updateProduct(
+      updateProduct(
           widget.productIndex,
           Product(
               title: _formData['title'],
