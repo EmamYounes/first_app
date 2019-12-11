@@ -1,5 +1,5 @@
 import 'package:first_app/models/product.dart';
-import 'package:first_app/scoped-models/products.dart';
+import 'package:first_app/scoped-models/main.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -21,8 +21,8 @@ class _ProductEditPage extends State<ProductEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<ProductsModel>(
-      builder: (BuildContext context, Widget child, ProductsModel model) {
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
         Widget pageContent =
             _buildPageContent(context, model.selectedProduct);
         return model.selectedProductIndex == null
@@ -77,8 +77,8 @@ class _ProductEditPage extends State<ProductEditPage> {
   }
 
   Widget _buildSumitButton() {
-    return ScopedModelDescendant<ProductsModel>(
-      builder: (BuildContext context, Widget child, ProductsModel model) {
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget child, MainModel model) {
         return RaisedButton(
           textColor: Colors.white,
           child: Text('Save'),

@@ -1,5 +1,6 @@
 import 'package:first_app/pages/auth.dart';
 import 'package:first_app/pages/products.dart';
+import 'package:first_app/scoped-models/main.dart';
 import 'package:first_app/scoped-models/products.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   Widget build(context) {
-    return ScopedModel<ProductsModel>(
+    return ScopedModel<MainModel>(
       child: MaterialApp(
         theme: ThemeData(
             accentColor: Colors.deepPurple,
@@ -51,8 +52,7 @@ class MyAppState extends State<MyApp> {
           }
           if (pathElements[1] == 'product') {
             return MaterialPageRoute<bool>(
-              builder: (BuildContext context) =>
-                  ProductPage(index),
+              builder: (BuildContext context) => ProductPage(index),
             );
           }
           return null;
@@ -64,7 +64,7 @@ class MyAppState extends State<MyApp> {
               builder: (BuildContext context) => ProductsPage());
         },
       ),
-      model: ProductsModel(),
+      model: MainModel(),
     );
   }
 }
