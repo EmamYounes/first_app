@@ -23,8 +23,7 @@ class _ProductEditPage extends State<ProductEditPage> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        Widget pageContent =
-            _buildPageContent(context, model.selectedProduct);
+        Widget pageContent = _buildPageContent(context, model.selectedProduct);
         return model.selectedProductIndex == null
             ? pageContent
             : Scaffold(
@@ -144,18 +143,11 @@ class _ProductEditPage extends State<ProductEditPage> {
     }
     _formKey.currentState.save();
     if (selectedProductIndex == null) {
-      addProduct(Product(
-          title: _formData['title'],
-          image: _formData['image'],
-          price: _formData['price'],
-          description: _formData['description']));
+      addProduct(_formData['title'], _formData['description'],
+          _formData['image'], _formData['price']);
     } else {
-      updateProduct(
-          Product(
-              title: _formData['title'],
-              image: _formData['image'],
-              price: _formData['price'],
-              description: _formData['description']));
+      updateProduct(_formData['title'], _formData['description'],
+          _formData['image'], _formData['price']);
     }
     Navigator.pushReplacementNamed(context, '/products');
   }

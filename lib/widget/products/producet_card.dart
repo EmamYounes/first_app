@@ -20,6 +20,7 @@ class ProductCard extends StatelessWidget {
           Image.asset(product.image),
           _buildTitlePriceContainer(),
           AddressTag('Union Square, San Francisco'),
+          Text(product.userEmail),
           _buildActionButtons(context)
         ],
       ),

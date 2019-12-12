@@ -6,11 +6,11 @@ class Product {
   final double price;
   final String image;
   final bool isFavorite;
-  final String userEmail;
-  final String userID;
+final String userEmail;
+final String userID;
 
-  Product(
-      {@required this.title,
+Product(
+    {@required this.title,
       @required this.description,
       @required this.price,
       @required this.image,
