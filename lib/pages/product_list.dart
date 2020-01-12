@@ -26,7 +26,8 @@ class ProductListPage extends StatelessWidget {
                 children: <Widget>[
                   ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: AssetImage(model.allProducts[index].image),
+                      backgroundImage:
+                          NetworkImage(model.allProducts[index].image),
                     ),
                     title: Text(model.allProducts[index].title),
                     subtitle:
@@ -42,8 +43,7 @@ class ProductListPage extends StatelessWidget {
     });
   }
 
-  Widget _buildEditButton(
-      BuildContext context, int index, MainModel model) {
+  Widget _buildEditButton(BuildContext context, int index, MainModel model) {
     return IconButton(
       icon: Icon(
         Icons.edit,

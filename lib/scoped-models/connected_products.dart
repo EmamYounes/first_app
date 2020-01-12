@@ -19,7 +19,9 @@ class ConnectedProductsModel extends Model {
       'description': description,
       'image':
           'https://vaya.in/recipes/wp-content/uploads/2018/02/Milk-Chocolate-1.jpg',
-      'price': price
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userID': _authenticatedUser.id
     };
     http
         .post(productUrl, body: json.encode(productData))
@@ -83,8 +85,22 @@ class ProductsModel extends ConnectedProductsModel {
 
   void fetchProduct() {
     http.get(productUrl).then((http.Response response) {
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      print(responseData);
+      final List<Product> fetchedProductList = [];
+      print(response.body);
+      final Map<String, dynamic> productListData = json.decode(response.body);
+      productListData.forEach((String productId, dynamic productData) {
+        final Product product = Product(
+            id: productId,
+            title: productData['title'],
+            description: productData['description'],
+            image: productData['image'],
+            price: productData['price'],
+            userEmail: productData['userEmail'],
+            userID: productData['userID']);
+        fetchedProductList.add(product);
+      });
+      _products = fetchedProductList;
+      notifyListeners();
     });
   }
 
