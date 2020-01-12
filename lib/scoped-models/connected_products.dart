@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:first_app/models/product.dart';
 import 'package:first_app/models/user.dart';
+import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 
 class ConnectedProductsModel extends Model {
@@ -9,17 +12,33 @@ class ConnectedProductsModel extends Model {
 
   void addProduct(
       String title, String description, String image, double price) {
-    Product newProduct = Product(
-        title: title,
-        description: description,
-        image: image,
-        price: price,
-        userEmail: _authenticatedUser.email,
-        userID: _authenticatedUser.id);
-    _products.add(newProduct);
-    notifyListeners();
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image':
+          'https://vaya.in/recipes/wp-content/uploads/2018/02/Milk-Chocolate-1.jpg',
+      'price': price
+    };
+    http
+        .post('https://flutter-products-46db9.firebaseio.com/products.json',
+            body: json.encode(productData))
+        .then((http.Response response) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      print(responseData);
+      Product newProduct = Product(
+          id: responseData['name'],
+          title: title,
+          description: description,
+          image: image,
+          price: price,
+          userEmail: _authenticatedUser.email,
+          userID: _authenticatedUser.id);
+      _products.add(newProduct);
+      notifyListeners();
+    });
   }
 }
+
 class ProductsModel extends ConnectedProductsModel {
   bool _showFavorites = false;
 
