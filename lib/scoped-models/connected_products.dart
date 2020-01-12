@@ -13,9 +13,10 @@ class ConnectedProductsModel extends Model {
       'https://flutter-products-46db9.firebaseio.com/products.json';
   bool _isLoading = false;
 
-  void addProduct(
+  Future<Null> addProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
+    notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
@@ -25,7 +26,7 @@ class ConnectedProductsModel extends Model {
       'userEmail': _authenticatedUser.email,
       'userID': _authenticatedUser.id
     };
-    http
+    return http
         .post(productUrl, body: json.encode(productData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -88,10 +89,16 @@ class ProductsModel extends ConnectedProductsModel {
 
   void fetchProduct() {
     _isLoading = true;
+    notifyListeners();
     http.get(productUrl).then((http.Response response) {
       final List<Product> fetchedProductList = [];
       print(response.body);
       final Map<String, dynamic> productListData = json.decode(response.body);
+      if (productListData == null) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
       productListData.forEach((String productId, dynamic productData) {
         final Product product = Product(
             id: productId,
