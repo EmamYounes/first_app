@@ -42,7 +42,23 @@ class _ProductsPageState extends State<ProductsPage> {
             )
           ],
         ),
-        body: Products());
+        body: _buildProductList());
+  }
+
+  Widget _buildProductList() {
+    return ScopedModelDescendant(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        Widget content = Center(
+          child: Text('No Product Found'),
+        );
+        if (model.displayProducts.length > 0 && !model.isLoading) {
+          content = Products();
+        } else if (model.isLoading) {
+          content = CircularProgressIndicator();
+        }
+        return content;
+      },
+    );
   }
 
   Drawer _buildSideDrawer(BuildContext context) {
