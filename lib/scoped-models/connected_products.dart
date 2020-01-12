@@ -9,6 +9,8 @@ class ConnectedProductsModel extends Model {
   List<Product> _products = [];
   User _authenticatedUser;
   int _selProductIndex;
+  String productUrl =
+      'https://flutter-products-46db9.firebaseio.com/products.json';
 
   void addProduct(
       String title, String description, String image, double price) {
@@ -20,8 +22,7 @@ class ConnectedProductsModel extends Model {
       'price': price
     };
     http
-        .post('https://flutter-products-46db9.firebaseio.com/products.json',
-            body: json.encode(productData))
+        .post(productUrl, body: json.encode(productData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       print(responseData);
@@ -78,6 +79,13 @@ class ProductsModel extends ConnectedProductsModel {
   void deleteProduct() {
     _products.removeAt(selectedProductIndex);
     notifyListeners();
+  }
+
+  void fetchProduct() {
+    http.get(productUrl).then((http.Response response) {
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      print(responseData);
+    });
   }
 
   void selectProduct(int index) {

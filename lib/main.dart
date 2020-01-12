@@ -1,7 +1,6 @@
 import 'package:first_app/pages/auth.dart';
 import 'package:first_app/pages/products.dart';
 import 'package:first_app/scoped-models/main.dart';
-import 'package:first_app/scoped-models/products.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -30,6 +29,7 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   Widget build(context) {
+    final MainModel model = MainModel();
     return ScopedModel<MainModel>(
       child: MaterialApp(
         theme: ThemeData(
@@ -41,7 +41,7 @@ class MyAppState extends State<MyApp> {
         routes: {
           // that's mean home page => '/'
           '/': (BuildContext context) => AuthPage(),
-          '/products': (BuildContext context) => ProductsPage(),
+          '/products': (BuildContext context) => ProductsPage(model),
           '/admin': (BuildContext context) => ProductAdminPage(),
         },
         onGenerateRoute: (RouteSettings settings) {
@@ -61,10 +61,10 @@ class MyAppState extends State<MyApp> {
         // Default route (screen)
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute(
-              builder: (BuildContext context) => ProductsPage());
+              builder: (BuildContext context) => ProductsPage(model));
         },
       ),
-      model: MainModel(),
+      model: model,
     );
   }
 }
