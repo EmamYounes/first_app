@@ -153,11 +153,13 @@ class _ProductEditPage extends State<ProductEditPage> {
     if (selectedProductIndex == null) {
       addProduct(_formData['title'], _formData['description'],
               _formData['image'], _formData['price'])
-          .then(() => Navigator.pushReplacementNamed(context, '/products')
+          .then((_) => Navigator.pushReplacementNamed(context, '/products')
               .then((_) => selectedProduct(null)));
     } else {
       updateProduct(_formData['title'], _formData['description'],
-          _formData['image'], _formData['price']);
+              _formData['image'], _formData['price'])
+          .then((_) => Navigator.pushReplacementNamed(context, '/products')
+              .then((_) => selectedProduct(null)));
     }
   }
 }

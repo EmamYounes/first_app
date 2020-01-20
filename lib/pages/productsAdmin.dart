@@ -1,10 +1,13 @@
-import 'package:first_app/models/product.dart';
+import 'package:first_app/scoped-models/main.dart';
 import 'package:flutter/material.dart';
 
 import './product_edit.dart';
 import './product_list.dart';
 
 class ProductAdminPage extends StatelessWidget {
+  final MainModel model;
+
+  ProductAdminPage(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +31,7 @@ class ProductAdminPage extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: <Widget>[
-            ProductEditPage(),
-            ProductListPage()
-          ],
+          children: <Widget>[ProductEditPage(), ProductListPage(model)],
         ),
       ),
     );
