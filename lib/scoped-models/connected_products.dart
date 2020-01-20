@@ -30,7 +30,7 @@ class ConnectedProductsModel extends Model {
         .post(productUrl, body: json.encode(productData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
-      print(responseData);
+      print('addProduct${response}');
       Product newProduct = Product(
           id: responseData['name'],
           title: title,
@@ -76,8 +76,7 @@ class ProductsModel extends ConnectedProductsModel {
     final Map<String, dynamic> updateData = {
       'title': title,
       'description': description,
-      'image':
-          'https://cdn.getyourguide.com/img/tour_img-1728184-146.jpg',
+      'image': 'https://cdn.getyourguide.com/img/tour_img-1728184-146.jpg',
       'price': price,
       'userEmail': selectedProduct.userEmail,
       'userID': selectedProduct.userID
@@ -86,8 +85,8 @@ class ProductsModel extends ConnectedProductsModel {
         .put(
             'https://flutter-products-46db9.firebaseio.com/products/${selectedProduct.id}.json',
             body: json.encode(updateData))
-        .then((http.Response responce) {
-      print(responce);
+        .then((http.Response response) {
+      print('updateProduct${response}');
       _isLoading = false;
       Product updatedProduct = Product(
           id: selectedProduct.id,
@@ -103,8 +102,19 @@ class ProductsModel extends ConnectedProductsModel {
   }
 
   void deleteProduct() {
+    _isLoading = true;
+    final _deletedProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
+    _selProductIndex = null;
     notifyListeners();
+    http
+        .delete(
+            'https://flutter-products-46db9.firebaseio.com/products/${_deletedProductId}.json')
+        .then((http.Response response) {
+      print('deleteProduct${response}');
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 
   void fetchProduct() {
