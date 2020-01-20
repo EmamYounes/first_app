@@ -117,10 +117,10 @@ class ProductsModel extends ConnectedProductsModel {
     });
   }
 
-  void fetchProduct() {
+  Future<Null> fetchProduct() {
     _isLoading = true;
     notifyListeners();
-    http.get(productUrl).then((http.Response response) {
+    return http.get(productUrl).then((http.Response response) {
       final List<Product> fetchedProductList = [];
       print(response.body);
       final Map<String, dynamic> productListData = json.decode(response.body);
