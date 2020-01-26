@@ -48,6 +48,11 @@ class ConnectedProductsModel extends Model {
       _isLoading = false;
       notifyListeners();
       return true;
+    }).catchError((error) {
+      print(error.toString());
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 }
@@ -83,7 +88,7 @@ class ProductsModel extends ConnectedProductsModel {
     });
   }
 
-  Future<Null> updateProduct(
+  Future<bool> updateProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
     notifyListeners();
@@ -112,10 +117,16 @@ class ProductsModel extends ConnectedProductsModel {
           userID: selectedProduct.userID);
       _products[selectedProductIndex] = updatedProduct;
       notifyListeners();
+      return true;
+    }).catchError((error) {
+      print(error.toString());
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
-  void deleteProduct() {
+  Future<bool> deleteProduct() {
     _isLoading = true;
     final _deletedProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
@@ -128,13 +139,19 @@ class ProductsModel extends ConnectedProductsModel {
       print('deleteProduct${response}');
       _isLoading = false;
       notifyListeners();
+      return true;
+    }).catchError((error) {
+      print(error.toString());
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
   }
 
   Future<Null> fetchProduct() {
     _isLoading = true;
     notifyListeners();
-    return http.get(productUrl).then((http.Response response) {
+    return http.get(productUrl).then<Null>((http.Response response) {
       final List<Product> fetchedProductList = [];
       print(response.body);
       final Map<String, dynamic> productListData = json.decode(response.body);
@@ -158,6 +175,12 @@ class ProductsModel extends ConnectedProductsModel {
       _isLoading = false;
       notifyListeners();
       _selProductId = null;
+      return;
+    }).catchError((error) {
+      print(error.toString());
+      _isLoading = false;
+      notifyListeners();
+      return;
     });
   }
 

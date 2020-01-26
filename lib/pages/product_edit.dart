@@ -158,27 +158,37 @@ class _ProductEditPage extends State<ProductEditPage> {
           Navigator.pushReplacementNamed(context, '/products')
               .then((_) => selectedProduct(null));
         } else {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Something went wrong'),
-                  content: Text('Please try again'),
-                  actions: <Widget>[
-                    FlatButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text('Okay'),
-                    )
-                  ],
-                );
-              });
+          showErrorDialog();
         }
       });
     } else {
       updateProduct(_formData['title'], _formData['description'],
               _formData['image'], _formData['price'])
-          .then((_) => Navigator.pushReplacementNamed(context, '/products')
-              .then((_) => selectedProduct(null)));
+          .then((bool success) {
+        if (success) {
+          Navigator.pushReplacementNamed(context, '/products')
+              .then((_) => selectedProduct(null));
+        } else {
+          showErrorDialog();
+        }
+      });
     }
+  }
+
+  void showErrorDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Something went wrong'),
+            content: Text('Please try again'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Okay'),
+              )
+            ],
+          );
+        });
   }
 }
