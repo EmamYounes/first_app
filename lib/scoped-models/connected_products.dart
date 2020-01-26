@@ -13,7 +13,7 @@ class ConnectedProductsModel extends Model {
       'https://flutter-products-46db9.firebaseio.com/products.json';
   bool _isLoading = false;
 
-  Future<Null> addProduct(
+  Future<bool> addProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
     notifyListeners();
@@ -29,6 +29,11 @@ class ConnectedProductsModel extends Model {
     return http
         .post(productUrl, body: json.encode(productData))
         .then((http.Response response) {
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
       final Map<String, dynamic> responseData = json.decode(response.body);
       print('addProduct${response}');
       Product newProduct = Product(
@@ -42,6 +47,7 @@ class ConnectedProductsModel extends Model {
       _products.add(newProduct);
       _isLoading = false;
       notifyListeners();
+      return true;
     });
   }
 }
@@ -151,7 +157,7 @@ class ProductsModel extends ConnectedProductsModel {
       _products = fetchedProductList;
       _isLoading = false;
       notifyListeners();
-      _selProductId=null;
+      _selProductId = null;
     });
   }
 
