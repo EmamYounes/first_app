@@ -8,7 +8,7 @@ import 'package:scoped_model/scoped_model.dart';
 class ConnectedProductsModel extends Model {
   List<Product> _products = [];
   User _authenticatedUser;
-  int _selProductIndex;
+  String _selProductId;
   String productUrl =
       'https://flutter-products-46db9.firebaseio.com/products.json';
   bool _isLoading = false;
@@ -60,13 +60,21 @@ class ProductsModel extends ConnectedProductsModel {
     return List.from(_products);
   }
 
-  int get selectedProductIndex {
-    return _selProductIndex;
+  String get selectedProductId {
+    return _selProductId;
   }
 
   Product get selectedProduct {
-    if (selectedProductIndex == null) return null;
-    return _products[selectedProductIndex];
+    if (selectedProductId == null) return null;
+    return _products.firstWhere((Product product) {
+      return product.id == selectedProductId;
+    });
+  }
+
+  int get selectedProductIndex {
+    return _products.indexWhere((Product product) {
+      return product.id == _selProductId;
+    });
   }
 
   Future<Null> updateProduct(
@@ -105,7 +113,7 @@ class ProductsModel extends ConnectedProductsModel {
     _isLoading = true;
     final _deletedProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
-    _selProductIndex = null;
+    _selProductId = null;
     notifyListeners();
     http
         .delete(
@@ -146,8 +154,8 @@ class ProductsModel extends ConnectedProductsModel {
     });
   }
 
-  void selectProduct(int index) {
-    _selProductIndex = index;
+  void selectProduct(String productId) {
+    _selProductId = productId;
   }
 
   bool get displayFavoritesOnly {
@@ -158,6 +166,7 @@ class ProductsModel extends ConnectedProductsModel {
     final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatues = !isCurrentlyFavorite;
     final Product updatedProduct = Product(
+        id: selectedProduct.id,
         title: selectedProduct.title,
         description: selectedProduct.description,
         price: selectedProduct.price,

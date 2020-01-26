@@ -1,3 +1,4 @@
+import 'package:first_app/models/product.dart';
 import 'package:first_app/pages/auth.dart';
 import 'package:first_app/pages/products.dart';
 import 'package:first_app/scoped-models/main.dart';
@@ -46,13 +47,18 @@ class MyAppState extends State<MyApp> {
         },
         onGenerateRoute: (RouteSettings settings) {
           final List<String> pathElements = settings.name.split('/');
-          int index = int.parse(pathElements[2]);
+          String productId = pathElements[2];
+          final Product product =
+              model.allProducts.firstWhere((Product product) {
+            return product.id == productId;
+          });
+          model.selectProduct(productId);
           if (pathElements[0] != '') {
             return null;
           }
           if (pathElements[1] == 'product') {
             return MaterialPageRoute<bool>(
-              builder: (BuildContext context) => ProductPage(index),
+              builder: (BuildContext context) => ProductPage(product),
             );
           }
           return null;
