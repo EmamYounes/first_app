@@ -53,13 +53,13 @@ class ProductsModel extends ConnectedProductsModel {
       'title': title,
       'description': description,
       'image':
-      'https://vaya.in/recipes/wp-content/uploads/2018/02/Milk-Chocolate-1.jpg',
+          'https://vaya.in/recipes/wp-content/uploads/2018/02/Milk-Chocolate-1.jpg',
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userID': _authenticatedUser.id
     };
     http.Response response =
-    await http.post(productUrl, body: json.encode(productData));
+        await http.post(productUrl, body: json.encode(productData));
     try {
       if (response.statusCode != 200 && response.statusCode != 201) {
         _isLoading = false;
@@ -87,6 +87,7 @@ class ProductsModel extends ConnectedProductsModel {
       return false;
     }
   }
+
   Future<bool> updateProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
@@ -214,6 +215,25 @@ class ProductsModel extends ConnectedProductsModel {
 }
 
 class UserModel extends ConnectedProductsModel {
+  static String apiKey = 'AIzaSyDfUx5R2STtVDMafWy8rwi3FO4ORJjardQ';
+  String signupUrl =
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}';
+
+  Future<Map<String, dynamic>> signup(String email, String password) async {
+    Map<String, dynamic> authData = {
+      'email': email,
+      'password': password,
+      'returnSecureToken': true
+    };
+    final http.Response response = await http.post(
+      signupUrl,
+      body: json.encode(authData),
+      headers: {'Content-Type': 'application/json'},
+    );
+    print('signupResponse ${json.decode(response.body)}');
+    return {'success': true, 'message': 'Authentication succeeded!'};
+  }
+
   void login(String email, String password) {
     _authenticatedUser = User(id: "1", email: email, password: password);
   }
