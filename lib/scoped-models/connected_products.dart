@@ -12,49 +12,6 @@ class ConnectedProductsModel extends Model {
   String productUrl =
       'https://flutter-products-46db9.firebaseio.com/products.json';
   bool _isLoading = false;
-
-  Future<bool> addProduct(
-      String title, String description, String image, double price) async {
-    _isLoading = true;
-    notifyListeners();
-    final Map<String, dynamic> productData = {
-      'title': title,
-      'description': description,
-      'image':
-          'https://vaya.in/recipes/wp-content/uploads/2018/02/Milk-Chocolate-1.jpg',
-      'price': price,
-      'userEmail': _authenticatedUser.email,
-      'userID': _authenticatedUser.id
-    };
-    http.Response response =
-        await http.post(productUrl, body: json.encode(productData));
-    try {
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        _isLoading = false;
-        notifyListeners();
-        return false;
-      }
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      print('addProduct${response}');
-      Product newProduct = Product(
-          id: responseData['name'],
-          title: title,
-          description: description,
-          image: image,
-          price: price,
-          userEmail: _authenticatedUser.email,
-          userID: _authenticatedUser.id);
-      _products.add(newProduct);
-      _isLoading = false;
-      notifyListeners();
-      return true;
-    } catch (error) {
-      print(error.toString());
-      _isLoading = false;
-      notifyListeners();
-      return false;
-    }
-  }
 }
 
 class ProductsModel extends ConnectedProductsModel {
@@ -88,6 +45,48 @@ class ProductsModel extends ConnectedProductsModel {
     });
   }
 
+  Future<bool> addProduct(
+      String title, String description, String image, double price) async {
+    _isLoading = true;
+    notifyListeners();
+    final Map<String, dynamic> productData = {
+      'title': title,
+      'description': description,
+      'image':
+      'https://vaya.in/recipes/wp-content/uploads/2018/02/Milk-Chocolate-1.jpg',
+      'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userID': _authenticatedUser.id
+    };
+    http.Response response =
+    await http.post(productUrl, body: json.encode(productData));
+    try {
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      print('addProduct${response}');
+      Product newProduct = Product(
+          id: responseData['name'],
+          title: title,
+          description: description,
+          image: image,
+          price: price,
+          userEmail: _authenticatedUser.email,
+          userID: _authenticatedUser.id);
+      _products.add(newProduct);
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (error) {
+      print(error.toString());
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
   Future<bool> updateProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
