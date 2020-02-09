@@ -96,34 +96,39 @@ class _AuthPageState extends State<AuthPage> {
     }
 
     _formKey.currentState.save();
+    Map<String, dynamic> successInformation;
     if (_authMode == AuthMode.Login) {
-      login(_formData['email'], _formData['password']);
+      successInformation =
+          await login(_formData['email'], _formData['password']);
+    } else {
+      successInformation =
+          await signup(_formData['email'], _formData['password']);
+    }
+    if (successInformation['success']) {
       Navigator.pushReplacementNamed(context, '/products');
     } else {
-      final Map<String, dynamic> successInformation =
-          await signup(_formData['email'], _formData['password']);
-      if (successInformation['success']) {
-        Navigator.pushReplacementNamed(context, '/products');
-      } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('An Error Ocurred!'),
-                content: Text(successInformation['message']),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('Ok'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              );
-            });
-      }
+      showErrorDialog(successInformation);
     }
     print('_submitForm ${_formData}');
+  }
+
+  void showErrorDialog(Map<String, dynamic> successInformation) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('An Error Ocurred!'),
+            content: Text(successInformation['message']),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override
