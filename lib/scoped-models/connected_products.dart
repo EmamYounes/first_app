@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:first_app/models/auth.dart';
 import 'package:first_app/models/product.dart';
 import 'package:first_app/models/user.dart';
+import 'package:first_app/utilits/shared-pref.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConnectedProductsModel extends Model {
   List<Product> _products = [];
@@ -225,6 +227,7 @@ class UserModel extends ConnectedProductsModel {
   String loginUrl =
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}';
   String url;
+  User get authenticatedUser => _authenticatedUser;
 
   Future<Map<String, dynamic>> authenticate(String email, String password,
       [AuthMode mode = AuthMode.Login]) async {
@@ -249,6 +252,12 @@ class UserModel extends ConnectedProductsModel {
           id: responseData['localId'],
           email: email,
           token: responseData['idToken']);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString(
+          SharedPreferencesUtilits.USER_TOKEN, responseData['idToken']);
+      prefs.setString(
+          SharedPreferencesUtilits.LOCAL_ID, responseData['localId']);
+      prefs.setString(SharedPreferencesUtilits.USER_EMAIL, email);
     } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
       message = 'This email not found';
     } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
@@ -261,6 +270,18 @@ class UserModel extends ConnectedProductsModel {
     notifyListeners();
     return {'success': !hasError, 'message': message};
 //    _authenticatedUser = User(id: "1", email: email, password: password);
+  }
+
+  void autoAuthenticate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String token = prefs.getString(SharedPreferencesUtilits.USER_TOKEN);
+    if (token != null) {
+      final String userEmail =
+          prefs.getString(SharedPreferencesUtilits.USER_EMAIL);
+      final String localId = prefs.getString(SharedPreferencesUtilits.LOCAL_ID);
+      _authenticatedUser = User(id: localId, email: userEmail, token: token);
+      notifyListeners();
+    }
   }
 }
 
