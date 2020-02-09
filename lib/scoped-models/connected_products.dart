@@ -220,6 +220,8 @@ class UserModel extends ConnectedProductsModel {
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}';
 
   Future<Map<String, dynamic>> signup(String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
     Map<String, dynamic> authData = {
       'email': email,
       'password': password,
@@ -240,6 +242,8 @@ class UserModel extends ConnectedProductsModel {
       message = 'This email already exists';
     }
     print('signupResponse ${responseData}');
+    _isLoading = false;
+    notifyListeners();
     return {'success': !hasError, 'message': message};
   }
 
