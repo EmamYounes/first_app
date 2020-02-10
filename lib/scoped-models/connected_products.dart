@@ -201,7 +201,7 @@ class ProductsModel extends ConnectedProductsModel {
     return _showFavorites;
   }
 
-  void toggleProductFavoriteStatus() {
+  void toggleProductFavoriteStatus() async {
     final bool isCurrentlyFavorite = selectedProduct.isFavorite;
     final bool newFavoriteStatues = !isCurrentlyFavorite;
     final Product updatedProduct = Product(
@@ -215,6 +215,30 @@ class ProductsModel extends ConnectedProductsModel {
         isFavorite: newFavoriteStatues);
     _products[selectedProductIndex] = updatedProduct;
     notifyListeners();
+    http.Response response;
+    if (newFavoriteStatues) {
+      response = await http.put(
+          'https://flutter-products-46db9.firebaseio.com/products/${selectedProduct.id}/wishlistusers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+          body: json.encode(true));
+      print('toggleProductFavoriteStatus${json.decode(response.body)}');
+    } else {
+      response = await http.delete(
+          'https://flutter-products-46db9.firebaseio.com/products/${selectedProduct.id}/wishlistusers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}');
+      print('toggleProductFavoriteStatus${json.decode(response.body)}');
+    }
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      final Product updatedProduct = Product(
+          id: selectedProduct.id,
+          title: selectedProduct.title,
+          description: selectedProduct.description,
+          price: selectedProduct.price,
+          image: selectedProduct.image,
+          userEmail: selectedProduct.userEmail,
+          userID: selectedProduct.userID,
+          isFavorite: !newFavoriteStatues);
+      _products[selectedProductIndex] = updatedProduct;
+      notifyListeners();
+    }
   }
 
   void toggleDisplayMode() {
