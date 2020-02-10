@@ -54,13 +54,17 @@ class _MyAppState extends State<MyApp> {
 //      home: AuthPage(),
         routes: {
           // that's mean home page => '/'
-          '/': (BuildContext context) => _model.authenticatedUser == null
-              ? AuthPage()
-              : ProductsPage(_model),
-          '/products': (BuildContext context) => ProductsPage(_model),
-          '/admin': (BuildContext context) => ProductAdminPage(_model),
+          '/': (BuildContext context) =>
+              !_isAuthenticated ? AuthPage() : ProductsPage(_model),
+          '/admin': (BuildContext context) =>
+              !_isAuthenticated ? AuthPage() : ProductAdminPage(_model),
         },
         onGenerateRoute: (RouteSettings settings) {
+          if (!_isAuthenticated) {
+            return MaterialPageRoute<bool>(
+              builder: (BuildContext context) => AuthPage(),
+            );
+          }
           final List<String> pathElements = settings.name.split('/');
           String productId = pathElements[2];
           final Product product =
@@ -73,7 +77,8 @@ class _MyAppState extends State<MyApp> {
           }
           if (pathElements[1] == 'product') {
             return MaterialPageRoute<bool>(
-              builder: (BuildContext context) => ProductPage(product),
+              builder: (BuildContext context) =>
+                  !_isAuthenticated ? AuthPage() : ProductPage(product),
             );
           }
           return null;
@@ -82,7 +87,8 @@ class _MyAppState extends State<MyApp> {
         // Default route (screen)
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute(
-              builder: (BuildContext context) => ProductsPage(_model));
+              builder: (BuildContext context) =>
+                  !_isAuthenticated ? AuthPage() : ProductsPage(_model));
         },
       ),
       model: _model,
