@@ -177,7 +177,11 @@ class ProductsModel extends ConnectedProductsModel {
             image: productData['image'],
             price: productData['price'],
             userEmail: productData['userEmail'],
-            userID: productData['userID']);
+            userID: productData['userID'],
+            isFavorite: productData['wishListUsers'] == null
+                ? false
+                : (productData['wishListUsers'] as Map<String, dynamic>)
+                    .containsKey(_authenticatedUser.id));
         fetchedProductList.add(product);
       });
       _products = fetchedProductList;
@@ -218,12 +222,12 @@ class ProductsModel extends ConnectedProductsModel {
     http.Response response;
     if (newFavoriteStatues) {
       response = await http.put(
-          'https://flutter-products-46db9.firebaseio.com/products/${selectedProduct.id}/wishlistusers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
+          'https://flutter-products-46db9.firebaseio.com/products/${selectedProduct.id}/wishListUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}',
           body: json.encode(true));
       print('toggleProductFavoriteStatus${json.decode(response.body)}');
     } else {
       response = await http.delete(
-          'https://flutter-products-46db9.firebaseio.com/products/${selectedProduct.id}/wishlistusers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}');
+          'https://flutter-products-46db9.firebaseio.com/products/${selectedProduct.id}/wishListUsers/${_authenticatedUser.id}.json?auth=${_authenticatedUser.token}');
       print('toggleProductFavoriteStatus${json.decode(response.body)}');
     }
     if (response.statusCode != 200 && response.statusCode != 201) {
