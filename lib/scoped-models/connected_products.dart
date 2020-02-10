@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:first_app/models/auth.dart';
@@ -6,6 +7,7 @@ import 'package:first_app/models/user.dart';
 import 'package:first_app/utilits/api.dart';
 import 'package:first_app/utilits/shared-pref.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,15 +51,15 @@ class ProductsModel extends ConnectedProductsModel {
     });
   }
 
-  Future<bool> addProduct(
-      String title, String description, String image, double price) async {
+  Future<bool> addProduct(String title, String description, String image,
+      double price) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
       'image':
-          'https://vaya.in/recipes/wp-content/uploads/2018/02/Milk-Chocolate-1.jpg',
+      'https://vaya.in/recipes/wp-content/uploads/2018/02/Milk-Chocolate-1.jpg',
       'price': price,
       'userEmail': _authenticatedUser.email,
       'userID': _authenticatedUser.id
@@ -93,8 +95,8 @@ class ProductsModel extends ConnectedProductsModel {
     }
   }
 
-  Future<bool> updateProduct(
-      String title, String description, String image, double price) {
+  Future<bool> updateProduct(String title, String description, String image,
+      double price) {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> updateData = {
@@ -107,8 +109,9 @@ class ProductsModel extends ConnectedProductsModel {
     };
     return http
         .put(
-            'https://flutter-products-46db9.firebaseio.com/products/${selectedProduct.id}.json?auth=${_authenticatedUser.token}',
-            body: json.encode(updateData))
+        'https://flutter-products-46db9.firebaseio.com/products/${selectedProduct
+            .id}.json?auth=${_authenticatedUser.token}',
+        body: json.encode(updateData))
         .then((http.Response response) {
       print('updateProduct${response}');
       _isLoading = false;
@@ -139,7 +142,8 @@ class ProductsModel extends ConnectedProductsModel {
     notifyListeners();
     http
         .delete(
-            'https://flutter-products-46db9.firebaseio.com/products/${_deletedProductId}.json?auth=${_authenticatedUser.token}')
+        'https://flutter-products-46db9.firebaseio.com/products/${_deletedProductId}.json?auth=${_authenticatedUser
+            .token}')
         .then((http.Response response) {
       print('deleteProduct${response}');
       _isLoading = false;
@@ -223,8 +227,12 @@ class ProductsModel extends ConnectedProductsModel {
 
 class UserModel extends ConnectedProductsModel {
   String url;
+  Timer _authTimer;
+  PublishSubject<bool> _userSubject = PublishSubject();
 
   User get authenticatedUser => _authenticatedUser;
+
+  PublishSubject<bool> get userSubject => _userSubject;
 
   Future<Map<String, dynamic>> authenticate(String email, String password,
       [AuthMode mode = AuthMode.Login]) async {
@@ -251,12 +259,18 @@ class UserModel extends ConnectedProductsModel {
           id: responseData['localId'],
           email: email,
           token: responseData['idToken']);
+      int expiresIn = int.parse(responseData['expiresIn']);
+      setAuthTimeout(expiresIn);
+      final DateTime now = DateTime.now();
+      final DateTime expiryTime = now.add(Duration(seconds: expiresIn));
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString(
           SharedPreferencesUtilities.USER_TOKEN, responseData['idToken']);
       prefs.setString(
           SharedPreferencesUtilities.LOCAL_ID, responseData['localId']);
       prefs.setString(SharedPreferencesUtilities.USER_EMAIL, email);
+      prefs.setString(
+          SharedPreferencesUtilities.EXPIRY_TIME, expiryTime.toIso8601String());
     } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
       message = 'This email not found';
     } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
@@ -274,20 +288,40 @@ class UserModel extends ConnectedProductsModel {
   void autoAuthenticate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String token = prefs.getString(SharedPreferencesUtilities.USER_TOKEN);
+    final String expiryTimeString =
+    prefs.getString(SharedPreferencesUtilities.EXPIRY_TIME);
     if (token != null) {
+      final DateTime now = DateTime.now();
+      final parsedExpiryTime = DateTime.parse(expiryTimeString);
+      if (parsedExpiryTime.isBefore(now)) {
+        _authenticatedUser = null;
+        notifyListeners();
+        return;
+      }
       final String userEmail =
-          prefs.getString(SharedPreferencesUtilities.USER_EMAIL);
+      prefs.getString(SharedPreferencesUtilities.USER_EMAIL);
       final String localId =
-          prefs.getString(SharedPreferencesUtilities.LOCAL_ID);
+      prefs.getString(SharedPreferencesUtilities.LOCAL_ID);
+      final int tokenLifespan = parsedExpiryTime
+          .difference(now)
+          .inSeconds;
       _authenticatedUser = User(id: localId, email: userEmail, token: token);
+      _userSubject.add(true);
+      setAuthTimeout(tokenLifespan);
       notifyListeners();
     }
   }
-  void logout() async{
-    _authenticatedUser=null;
+
+  void logout() async {
+    _authenticatedUser = null;
+    _authTimer.cancel();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
-    
+    _userSubject.add(false);
+  }
+
+  void setAuthTimeout(int time) {
+    _authTimer = Timer(Duration(microseconds: time * 5), logout);
   }
 }
 

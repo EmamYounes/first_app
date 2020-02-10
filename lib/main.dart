@@ -30,10 +30,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final MainModel _model = MainModel();
+  bool _isAuthenticated = false;
 
   @override
   void initState() {
     _model.autoAuthenticate();
+    _model.userSubject.listen((bool isAuthenticated) {
+      setState(() {
+        _isAuthenticated = isAuthenticated;
+      });
+    });
     super.initState();
   }
 
@@ -48,9 +54,9 @@ class _MyAppState extends State<MyApp> {
 //      home: AuthPage(),
         routes: {
           // that's mean home page => '/'
-          '/':(BuildContext context) =>_model.authenticatedUser == null
-                      ? AuthPage()
-                      : ProductsPage(_model),
+          '/': (BuildContext context) => _model.authenticatedUser == null
+              ? AuthPage()
+              : ProductsPage(_model),
           '/products': (BuildContext context) => ProductsPage(_model),
           '/admin': (BuildContext context) => ProductAdminPage(_model),
         },
