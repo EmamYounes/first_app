@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:first_app/models/auth.dart';
 import 'package:first_app/models/product.dart';
 import 'package:first_app/models/user.dart';
+import 'package:first_app/utilits/api.dart';
 import 'package:first_app/utilits/shared-pref.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
@@ -221,12 +222,8 @@ class ProductsModel extends ConnectedProductsModel {
 }
 
 class UserModel extends ConnectedProductsModel {
-  static String apiKey = 'AIzaSyDfUx5R2STtVDMafWy8rwi3FO4ORJjardQ';
-  String signupUrl =
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}';
-  String loginUrl =
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}';
   String url;
+
   User get authenticatedUser => _authenticatedUser;
 
   Future<Map<String, dynamic>> authenticate(String email, String password,
@@ -238,7 +235,9 @@ class UserModel extends ConnectedProductsModel {
       'password': password,
       'returnSecureToken': true
     };
-    url = mode == AuthMode.Login ? loginUrl : signupUrl;
+    url = mode == AuthMode.Login
+        ? ApiUtilities.LOGIN_URL
+        : ApiUtilities.SIGN_UP_URL;
     final http.Response response = await http.post(url,
         body: json.encode(authData),
         headers: {'Content-Type': 'application/json'});
@@ -254,10 +253,10 @@ class UserModel extends ConnectedProductsModel {
           token: responseData['idToken']);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString(
-          SharedPreferencesUtilits.USER_TOKEN, responseData['idToken']);
+          SharedPreferencesUtilities.USER_TOKEN, responseData['idToken']);
       prefs.setString(
-          SharedPreferencesUtilits.LOCAL_ID, responseData['localId']);
-      prefs.setString(SharedPreferencesUtilits.USER_EMAIL, email);
+          SharedPreferencesUtilities.LOCAL_ID, responseData['localId']);
+      prefs.setString(SharedPreferencesUtilities.USER_EMAIL, email);
     } else if (responseData['error']['message'] == 'EMAIL_NOT_FOUND') {
       message = 'This email not found';
     } else if (responseData['error']['message'] == 'INVALID_PASSWORD') {
@@ -274,11 +273,12 @@ class UserModel extends ConnectedProductsModel {
 
   void autoAuthenticate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String token = prefs.getString(SharedPreferencesUtilits.USER_TOKEN);
+    final String token = prefs.getString(SharedPreferencesUtilities.USER_TOKEN);
     if (token != null) {
       final String userEmail =
-          prefs.getString(SharedPreferencesUtilits.USER_EMAIL);
-      final String localId = prefs.getString(SharedPreferencesUtilits.LOCAL_ID);
+          prefs.getString(SharedPreferencesUtilities.USER_EMAIL);
+      final String localId =
+          prefs.getString(SharedPreferencesUtilities.LOCAL_ID);
       _authenticatedUser = User(id: localId, email: userEmail, token: token);
       notifyListeners();
     }
