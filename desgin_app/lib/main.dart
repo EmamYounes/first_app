@@ -35,23 +35,35 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildBody(BuildContext context) {
-    return Center(
-      child: Stack(
-        alignment: Alignment(1.3, -.1),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Center(
+          child: buildStack(1.3),
+        ),
+        Center(
+          child: buildStack(-1.3),
+        ),
+      ],
+    );
+  }
+
+  Stack buildStack(double x) {
+    return Stack(
+      alignment: Alignment(x, -.1),
 //        alignment: AlignmentDirectional.centerEnd,
-        children: <Widget>[
-          Icon(
-            Icons.call_to_action,
-            color: Colors.red,
-            size: 100,
-          ),
-          Icon(
-            Icons.access_time,
-            color: Colors.blue,
-            size: 40,
-          ),
-        ],
-      ),
+      children: <Widget>[
+        Icon(
+          Icons.call_to_action,
+          color: Colors.red,
+          size: 100,
+        ),
+        Icon(
+          Icons.access_time,
+          color: Colors.blue,
+          size: 40,
+        ),
+      ],
     );
   }
 
