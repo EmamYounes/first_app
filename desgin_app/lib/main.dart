@@ -38,6 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Center(
       child: Stack(
         alignment: Alignment(1.3, -.1),
+//        alignment: AlignmentDirectional.centerEnd,
         children: <Widget>[
           Icon(
             Icons.call_to_action,
