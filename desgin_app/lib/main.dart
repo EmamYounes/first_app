@@ -28,9 +28,23 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration(seconds: 1),(){
+      _ackAlert(context);
+//      print(object);
+    });
     return Scaffold(
       appBar: buildAppBar(),
-      body: buildBody(context),
+//      body: buildBody(context),
+    body: Center(
+      child: Column(
+        children: <Widget>[
+          new RaisedButton(onPressed: (){
+            _ackAlert(context);
+          },
+          child: const Text("Ack Dialog"),)
+        ],
+      ),
+    ),
     );
   }
 
@@ -47,7 +61,25 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
   }
-
+  Future<void> _ackAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Not in stock'),
+          content: const Text('This item is no longer available'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   Stack buildStack(double x) {
     return Stack(
       alignment: Alignment(x, -.1),
